@@ -7,7 +7,13 @@ import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function NameForm({ userName }: { userName: string }) {
+export default function NameForm({
+  userName,
+  id
+}: {
+  userName: string;
+  id: string;
+}) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -43,6 +49,7 @@ export default function NameForm({ userName }: { userName: string }) {
     >
       <div className="mt-8 mb-4 text-xl font-semibold">
         <form id="nameForm" onSubmit={(e) => handleSubmit(e)}>
+          <input type="hidden" name="id" defaultValue={id} />
           <input
             type="text"
             name="fullName"

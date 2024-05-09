@@ -11,10 +11,9 @@ export default async function Account() {
     data: { user }
   } = await supabase.auth.getUser();
 
-  const { data: userDetails } = await supabase
-    .from('users')
-    .select('*')
-    .single();
+  const { data: userDetails } = user
+    ? await supabase.from('users').select('*').eq('id', user.id).single()
+    : { data: null };
 
   const { data: subscription, error } = await supabase
     .from('subscriptions')
@@ -44,8 +43,15 @@ export default async function Account() {
       </div>
       <div className="p-4">
         <CustomerPortalForm subscription={subscription} />
-        <NameForm userName={userDetails?.full_name ?? ''} />
-        <EmailForm userEmail={user.email} />
+        {userDetails && (
+          <>
+            <NameForm
+              userName={userDetails.full_name || ''}
+              id={userDetails.id || ''}
+            />
+            <EmailForm userEmail={user.email} />
+          </>
+        )}
       </div>
     </section>
   );
